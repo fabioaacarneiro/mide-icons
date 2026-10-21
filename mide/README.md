@@ -86,3 +86,25 @@ python3 mide/build_icons.py && python3 mide/apply.py
 
 Não use as opções `-a` (redesenhos de apps do macOS) nem `-p` (logo do KDE no lugar
 do da Apple, que aqui já é a marca do mide).
+
+### Etapa 4: tipos de arquivo e símbolos (2026-10-21)
+
+Revisão dos 298 tipos de arquivo (`src/mimes/scalable`) e de 565 símbolos (apps,
+aparelhos, lugares, categorias, tipos e emblemas), com folhas de contato feitas pelo
+`examples/mide-folha-de-icones` do mide.
+
+| Recriação da Apple | No mide-icons | Nomes no tema |
+|---|---|---|
+| Caixa marrom com fita do instalador de pacotes | Caixa verde-azulada lisa, o mesmo cartão e símbolo | `application-software`, `application-x-executable`, `application-x-alpm-package`, `system-component-*` (também em `alternative/`), `file-roller` |
+| Nota do Apple Music | Nota do próprio tema (`application-audio`) | `audio-x-generic` |
+| Xcode (planta com martelo) | Folha de código do tema (`text-x-script`) | `text-x-makefile` |
+| Rosto do Finder (símbolo) | Pasta | `system-file-manager-symbolic` (Nautilus, Arquivos do GNOME) |
+| Bússola do Safari (símbolo) | Globo | `web-browser-symbolic` (e os atalhos de navegador) |
+| "A" da App Store (símbolo) | Sacola com seta | `software-store-symbolic`, `gnome-software-symbolic` |
+| "A" das pastas de modelos (símbolo e 16 px) | Pasta de documentos | `folder-templates-symbolic`, `places/16/folder-templates` |
+| Pássaro do Swift | Folha de código | `text-swift-symbolic` |
+
+Ficam como estão: logos de outras empresas em tipos de arquivo (Office, Adobe, linguagens),
+o símbolo ⌘ (é o da tecla, não um logo) e os ícones de apps de terceiros que usam caixas
+como marca própria (BoxBuddy, Warehouse, Boxflat, Shelly).
+

@@ -24,6 +24,11 @@ quadrado arredondado, grade de 64 px):
   App Store, Preferências do Sistema, Terminal, TextEdit, Captura de Tela, Calendário,
   Relógio, Contatos, Música, Fotos, Monitor de Atividade, Mapas, Lembretes, Mail,
   Mensagens, Tempo e outros, depois de revisar as 1.446 imagens de apps do tema.
+- **Tipos de arquivo e símbolos** (revisão dos 298 tipos de arquivo e dos símbolos
+  monocromáticos): a caixa marrom com fita do instalador de pacotes vira uma caixa
+  verde-azulada lisa; a nota do Apple Music, o Xcode, o rosto do Finder, a bússola do
+  Safari, o "A" da App Store e o pássaro do Swift dão lugar a desenhos do próprio tema
+  (ou a sacola com seta, no caso da loja).
 - **Nomes para os apps do mide:** `mide-terminal`, `mide-files`, `mide-text`,
   `mide-settings`, `mide-screenshot`, `mide-calculator`, `mide-about`.
 

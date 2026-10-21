@@ -9,6 +9,15 @@
    iMac (`computer`) também; `folder-apple` vira pasta comum.
 3. O "A" das pastas `folder-templates` (todas as cores) vira um modelo de documento.
 4. Nomes dos apps do mide (`mide-terminal`, `mide-files`...).
+5. Tipos de arquivo que recriavam desenhos da Apple: a caixa marrom com fita do
+   instalador de pacotes (pacotes, componentes do sistema, executáveis e alguns apps
+   de pacotes) vira uma caixa verde-azulada lisa, sem a fita; a nota do Apple Music
+   (`audio-x-generic`) vira a nota do próprio tema; o Xcode (`text-x-makefile`) vira a
+   folha de código do tema.
+6. Símbolos monocromáticos com desenhos da Apple: o rosto do Finder vira a pasta, a
+   bússola do Safari vira o globo, o "A" da App Store vira a sacola com seta (como o
+   ícone colorido da loja), o "A" das pastas de modelos vira a pasta de documentos e o
+   pássaro do Swift vira a folha de código.
 
 Uso: python3 mide/build_icons.py && python3 mide/apply.py
 """
@@ -128,6 +137,66 @@ APPLE_ON_MONITOR = [
 ]
 
 
+# Tipos de arquivo trocados por outro desenho do próprio tema (mesma pasta).
+MIME_REPLACE = {
+    "audio-x-generic": "application-audio",
+    "text-x-makefile": "text-x-script",
+}
+
+# Símbolos (src/...) trocados por outro símbolo do próprio tema.
+SYMBOLIC_REPLACE = {
+    "apps/symbolic/system-file-manager-symbolic": "places/symbolic/folder-symbolic",
+    "apps/symbolic/web-browser-symbolic": "actions/symbolic/globe-symbolic",
+    "places/symbolic/folder-templates-symbolic": "places/symbolic/folder-documents-symbolic",
+    "places/16/folder-templates": "places/16/folder-documents",
+    "mimes/symbolic/text-swift-symbolic": "mimes/symbolic/text-x-script-symbolic",
+}
+
+# Sacola com seta (loja de apps), na grade de 16 dos símbolos.
+BAG = (
+    '<path fill="currentColor" fill-rule="evenodd" d="M3.5 5h9c.55 0 1 .45 1 1l-.6 7.6c-.05.8-.7 1.4-1.5 1.4H4.6'
+    'c-.8 0-1.45-.6-1.5-1.4L2.5 6c0-.55.45-1 1-1zm.1 1.2.55 7.3c.02.2.2.35.4.35h6.9c.2 0 .38-.15.4-.35l.55-7.3z"/>'
+    '<path fill="currentColor" d="M8 2.2a2.7 2.7 0 0 0-2.7 2.7V5h1.2v-.1a1.5 1.5 0 0 1 3 0V5h1.2v-.1A2.7 2.7 0 0 0 8 2.2z"/>'
+    '<path fill="currentColor" d="M7.4 7.5h1.2v3l1.05-1.05.85.85L8 12.8l-2.5-2.5.85-.85 1.05 1.05z"/>'
+)
+BAG_NAMES = ["apps/symbolic/software-store-symbolic", "apps/symbolic/gnome-software-symbolic"]
+
+
+def bag_svg(color="#363636"):
+    return (
+        '<svg width="16" height="16" version="1.1" xmlns="http://www.w3.org/2000/svg">\n'
+        f' <defs>\n  <style id="current-color-scheme" type="text/css">.ColorScheme-Text {{ color:{color}; }}</style>\n </defs>\n'
+        f' <g class="ColorScheme-Text">{BAG}</g>\n</svg>\n'
+    )
+
+
+# Caixa marrom do instalador (degradês de baixo para cima) → caixa verde-azulada.
+BOX_COLORS = {
+    "#c18434": "#1f8f86",
+    "#d4a25e": "#1f8f86",
+    "#e4b154": "#3fc9b6",
+    "#e4b153": "#3fc9b6",
+    "#a8722e": "#1b7d75",
+    "#db9f2e": "#35b3a2",
+    "#815100": "#0d4f4a",
+}
+# A fita: um degradê claro próprio (#f8deac → #edcaa2).
+TAPE_STOP = "#f8deac"
+
+
+def plain_box(text):
+    """Tira a fita da caixa (a faixa vertical, pelo degradê dela, e o vinco do meio) e
+    troca o marrom."""
+    for tape in re.findall(r'<linearGradient[^>]*\bid="([^"]+)"[^>]*>(?:(?!</linearGradient>).)*' + TAPE_STOP, text, re.S):
+        text = re.sub(r'<path\b[^>]*fill="url\(#' + re.escape(tape) + r'\)"[^>]*/>', "", text)
+    # A faixa também aparece com cor sólida (versão alternativa): pelo desenho dela.
+    text = re.sub(r'<path\b[^>]*\bd="[Mm]25 4v56h14[Vv]-?(?:4|56)[zZ][^"]*"[^>]*/>', "", text)
+    text = re.sub(r'<rect\b(?=[^>]*\bx="31\.5")(?=[^>]*\by="4")(?=[^>]*\bwidth="1")(?=[^>]*\bheight="56")[^>]*/>', "", text)
+    for old, new in BOX_COLORS.items():
+        text = text.replace(old, new)
+    return text
+
+
 def path_bbox(d):
     """Caixa aproximada de um caminho SVG (pelos pontos de cada comando)."""
     tokens = re.findall(r"[MmLlHhVvCcSsQqTtAaZz]|-?(?:\d+\.?\d*|\.\d+)(?:e-?\d+)?", d)
@@ -241,6 +310,36 @@ def main():
         scale = f' transform="scale({k:.4f})"' if abs(k - 1) > 0.01 else ""
         new = f'<path d="{TEMPLATE_GLYPH}" fill="{fill.group(1) if fill else "#000"}"' + (f' opacity="{opacity.group(1)}"' if opacity else "") + scale + "/>"
         write(path, text[:last] + new + text[end:])
+
+    # 5. Tipos de arquivo com desenhos da Apple.
+    for name, other in MIME_REPLACE.items():
+        for path in ROOT.glob(f"src/mimes/scalable/{name}.svg"):
+            source = path.with_name(f"{other}.svg")
+            if source.exists():
+                write(path, source.read_text())
+    # Só os tipos de arquivo e o compactador (a caixa com zíper do utilitário de
+    # arquivos do macOS); apps de terceiros com caixas próprias (BoxBuddy, Warehouse)
+    # ficam como são.
+    boxes = [p for d in ("src", "alternative") for p in ROOT.glob(f"{d}/mimes/**/*.svg")]
+    boxes += [ROOT / d / "apps/scalable/file-roller.svg" for d in ("src", "alternative")]
+    for path in boxes:
+        if path.is_symlink() or not path.exists():
+            continue
+        text = path.read_text(errors="ignore")
+        new = plain_box(text)
+        if new != text:
+            write(path, new)
+
+    # 6. Símbolos com desenhos da Apple.
+    for target, source in SYMBOLIC_REPLACE.items():
+        src, dst = ROOT / "src" / f"{source}.svg", ROOT / "src" / f"{target}.svg"
+        if src.exists() and dst.exists():
+            write(dst, src.read_text())
+    for name in BAG_NAMES:
+        path = ROOT / "src" / f"{name}.svg"
+        if path.exists():
+            color = re.search(r"color:\s*(#[0-9a-fA-F]{3,6})", path.read_text())
+            write(path, bag_svg(color.group(1) if color else "#363636"))
 
     # 4. Nomes dos apps do mide.
     for name, target in MIDE_APPS.items():

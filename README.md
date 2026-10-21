@@ -1,50 +1,57 @@
-<img src="logo.png" alt="Logo" align="right" /> WhiteSur Icon Theme
-======
+# mide-icons
 
-MacOS Big Sur like icon theme for linux desktops
+Tema de ícones do [mide](https://github.com/fabioaacarneiro/mide), o ambiente de
+desktop para Linux feito em Rust sobre Wayland.
 
-### Donate
+![Ícones próprios do mide](mide/preview.png)
 
-If you like my project, you can buy me a coffee:
+O mide-icons é um fork do excelente
+[WhiteSur icon theme](https://github.com/vinceliuice/WhiteSur-icon-theme), de
+**Vince Liuice**. Todo o trabalho de arte do WhiteSur é dele (licença GPL-3.0, veja
+`COPYING` e `AUTHORS`); o README original continua em
+[`README.WhiteSur.md`](README.WhiteSur.md). Se gostar do tema, apoie o autor original.
 
-<span class="paypal"><a href="https://www.paypal.me/vinceliuice" title="Donate to this project using Paypal"><img src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png" alt="PayPal donate button" /></a></span>
+## O que muda em relação ao WhiteSur
 
-## Install tips
+O mide é inspirado no macOS, mas não copia nada da Apple. O WhiteSur, por padrão, traz
+o logo da Apple e recriações dos ícones de vários apps da Apple. Este fork troca essas
+partes por desenhos próprios, no mesmo acabamento do tema (mesma sombra, mesmo
+quadrado arredondado, grade de 64 px):
 
-Usage:  `./install.sh`  **[OPTIONS...]**
+- **Sem o logo da Apple:** o menu do sistema (`start-here`) e os desenhos de iMac usam
+  a marca do mide (o anel com o ponto).
+- **Desenhos próprios** (os da imagem acima) no lugar das recriações do Finder, Safari,
+  App Store, Preferências do Sistema, Terminal, TextEdit, Captura de Tela, Calendário,
+  Relógio, Contatos, Música, Fotos, Monitor de Atividade, Mapas, Lembretes, Mail,
+  Mensagens, Tempo e outros, depois de revisar as 1.446 imagens de apps do tema.
+- **Nomes para os apps do mide:** `mide-terminal`, `mide-files`, `mide-text`,
+  `mide-settings`, `mide-screenshot`, `mide-calculator`, `mide-about`.
 
-|  OPTIONS:           | |
-|:--------------------|:-------------|
-|-d, --dest           | Specify theme destination directory (Default: $HOME/.local/share/icons)|
-|-n, --name           | Specify theme name (Default: WhiteSur)|
-|-t, --theme          | Specify theme color variant(s) [default/purple/pink/red/orange/yellow/green/grey/all] (Default: blue)|
-|-a, --alternative    | Install alternative icons (redesigned MacOS default icons)|
-|-b, --bold           | Install bold panel icons version|
-| -p, --kde-plasma    | Replace Apple logo with KDE Plasma logo|
-|-r,--remove,-u,--uninstall | Uninstall (remove) icon themes|
-|-h, --help           | Show this help|
+A lista completa, com os nomes de cada ícone trocado, fica em
+[`mide/README.md`](mide/README.md).
 
-> **Note for snaps:** To use these icons with snaps, the best way is to make a copy of the application's .desktop located in `/var/lib/snapd/desktop/applications/name-of-the-snap-application.desktop` into `$HOME/.local/share/applications/`. Then use any text editor and change the "Icon=" to "Icon=name-of-the-icon.svg"
+## Instalar
 
-> For more information, run: `./install.sh --help`
+No mide, o `data/mide-atualizar` instala este tema sozinho, na versão fixada pelo
+projeto. Para instalar à mão:
 
-![alt](alt-version.png?raw=true)
+```sh
+./install.sh -n mide        # instala mide, mide-light e mide-dark em ~/.local/share/icons
+```
 
-![bold](bold-size.png?raw=true)
+Não use as opções `-a` (redesenhos de apps do macOS) nem `-p` (logo do KDE no lugar do
+da Apple, que aqui já é a marca do mide). As outras opções do WhiteSur continuam
+valendo (`./install.sh --help`).
 
-> Bold version suggested use in `High resolution display` like 4k display with 200% scale!
+## Atualizar a partir do WhiteSur
 
-## Requirement
-You can use this with:
+As mudanças do mide ficam em `mide/` e são reaplicadas depois de trazer uma versão
+nova do original:
 
-### GTK theme
+```sh
+git fetch upstream && git merge upstream/master
+python3 mide/build_icons.py && python3 mide/apply.py
+```
 
-WhiteSur-gtk-theme: https://github.com/vinceliuice/WhiteSur-gtk-theme
-
-### KDE theme
-
-WhiteSur-kde: https://github.com/vinceliuice/WhiteSur-kde
-
-## Preview
-![1](preview.png)
-![2](preview01.png)
+Depois, confira os ícones renderizados e se nenhum atalho ficou quebrado
+(`find <tema instalado> -xtype l`).

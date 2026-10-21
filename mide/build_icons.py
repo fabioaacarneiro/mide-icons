@@ -596,6 +596,71 @@ def notifications():
     icon("mide-notifications", "#c08bff", "#7a3fe0", defs, body)
 
 
+def chat():
+    """Mensagens: dois balões, um com os três pontos de digitação (no lugar do balão verde)."""
+    defs = """
+<linearGradient id="b1" x1="0" x2="0" y1="3" y2="10" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e3ecfb"/></linearGradient>
+<linearGradient id="b2" x1="0" x2="0" y1="7" y2="13.5" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffb347"/><stop offset="1" stop-color="#ff7a3d"/></linearGradient>"""
+    back = "M3.6 3.3h6.4c.65 0 1.2.55 1.2 1.2v3.4c0 .65-.55 1.2-1.2 1.2H6.1l-1.85 1.45v-1.45H3.6c-.65 0-1.2-.55-1.2-1.2V4.5c0-.65.55-1.2 1.2-1.2z"
+    front = "M7.6 7.3h5.73c.65 0 1.2.55 1.2 1.2v3.1c0 .65-.55 1.2-1.2 1.2h-.6v1.4l-1.8-1.4H7.6c-.65 0-1.2-.55-1.2-1.2V8.5c0-.65.55-1.2 1.2-1.2z"
+    dots = "".join(f'<circle cx="{x}" cy="10.05" r=".42" fill="#fff"/>' for x in (8.85, 10.45, 12.05))
+    body = f"""
+<path d="{back}" fill="#24135c" opacity=".35" filter="url(#soft)" transform="translate(0 .3)"/>
+<path d="{back}" fill="url(#b1)"/>
+<rect x="3.6" y="4.75" width="5.2" height=".42" rx=".21" fill="#b9c4d8"/>
+<rect x="3.6" y="6.0" width="3.6" height=".42" rx=".21" fill="#b9c4d8"/>
+<path d="{front}" fill="#24135c" opacity=".35" filter="url(#soft)" transform="translate(0 .3)"/>
+<path d="{front}" fill="url(#b2)"/>
+{dots}"""
+    icon("mide-chat", "#8a7bff", "#4a3fd8", defs, body)
+
+
+def recorder():
+    """Gravador de áudio: ondas sonoras com o botão de gravar (no lugar do Gravador de Voz)."""
+    defs = """
+<linearGradient id="wave" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#7cd4ff"/><stop offset="1" stop-color="#4a7bff"/></linearGradient>"""
+    heights = (1.2, 2.4, 4.2, 3.0, 5.6, 3.6, 2.0, 4.6, 2.8, 1.6)
+    bars = "".join(
+        f'<rect x="{3.5 + i * 1.0:.2f}" y="{7.6 - h / 2:.2f}" width=".55" height="{h}" rx=".27" fill="url(#wave)"/>'
+        for i, h in enumerate(heights)
+    )
+    body = f"""
+{bars}
+<circle cx="8.466" cy="12.4" r="1.75" fill="#000" opacity=".4" filter="url(#soft)" transform="translate(0 .25)"/>
+<circle cx="8.466" cy="12.4" r="1.75" fill="#fff"/>
+<circle cx="8.466" cy="12.4" r="1.15" fill="#ff4f5e"/>"""
+    icon("mide-recorder", "#353a45", "#15171c", defs, body)
+
+
+def fonts():
+    """Fontes: um "F" e um "f" desenhados sobre a folha (no lugar do "Aa")."""
+    defs = """
+<linearGradient id="fpage" x1="0" x2="0" y1="3" y2="14" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#eef1f6"/></linearGradient>
+<linearGradient id="ink" x1="0" x2="0" y1="5" y2="12" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#7b6cff"/><stop offset="1" stop-color="#4c5bd5"/></linearGradient>"""
+    page = "M4.3 2.9h8.33c.6 0 1.1.5 1.1 1.1v9.1c0 .6-.5 1.1-1.1 1.1H4.3a1.1 1.1 0 0 1-1.1-1.1V4c0-.6.5-1.1 1.1-1.1z"
+    body = f"""
+<path d="{page}" fill="#5b2a0a" opacity=".35" filter="url(#soft)" transform="translate(0 .35)"/>
+<path d="{page}" fill="url(#fpage)"/>
+<path d="M4.75 5.1h3.4v1.05H5.95v1.5h1.9v1.05h-1.9v2.75h-1.2z" fill="url(#ink)"/>
+<path d="M10.55 5.05c-.95 0-1.55.6-1.55 1.6v.85h-.65v.95H9v3.05h1.15V8.45h1.05V7.5h-1.05v-.75c0-.45.2-.65.6-.65.2 0 .38.03.55.08l.15-.98a2.9 2.9 0 0 0-.9-.15z" fill="#3b4252"/>
+<rect x="4.4" y="12.0" width="8.1" height=".14" fill="#c9cfd9"/>"""
+    icon("mide-fonts", "#ffb86b", "#ff7a59", defs, body)
+
+
+def weather():
+    """Tempo: sol atrás da nuvem, em tons de fim de tarde (no lugar do céu azul da Apple)."""
+    defs = """
+<radialGradient id="sun" cx="6.3" cy="6.0" r="3" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff3a6"/><stop offset="1" stop-color="#ffb21f"/></radialGradient>
+<linearGradient id="cloud" x1="0" x2="0" y1="7" y2="12.5" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#dfe6f2"/></linearGradient>"""
+    cloud = "M5.4 12.4h7.1a2.1 2.1 0 0 0 .3-4.18 2.95 2.95 0 0 0-5.6-.9 2.55 2.55 0 0 0-1.8 5.08z"
+    body = f"""
+<circle cx="6.3" cy="6.0" r="2.6" fill="#ffb21f" opacity=".45" filter="url(#glow)"/>
+<circle cx="6.3" cy="6.0" r="2.25" fill="url(#sun)"/>
+<path d="{cloud}" fill="#3a1d5c" opacity=".35" filter="url(#soft)" transform="translate(0 .35)"/>
+<path d="{cloud}" fill="url(#cloud)"/>"""
+    icon("mide-weather", "#ff9a7a", "#7a5cff", defs, body)
+
+
 def mark_symbolic(path, size, color="#363636"):
     """Marca do mide (anel com ponto) no lugar do logo da Apple, para ícones de
     `start-here` (menu do sistema). Cor pelo esquema do tema, como o original."""
@@ -644,5 +709,9 @@ if __name__ == "__main__":
     video_player()
     mouse()
     notifications()
+    chat()
+    recorder()
+    fonts()
+    weather()
     mark_symbolic(OUT / "mide-mark.svg", 16)
     print("ícones gerados em", OUT)

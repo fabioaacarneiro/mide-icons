@@ -66,6 +66,32 @@ REPLACE = {
     "preferences-desktop-navigation": "mide-web-browser",
     "preferences-desktop-peripherals": "mide-mouse",
     "preferences-desktop-notification": "mide-notifications",
+    # Revisão das 1.446 folhas de apps (2026-10-21).
+    "safari": "mide-web-browser",
+    "softwarecenter-debian": "mide-software-store",
+    "softwarecenter-ubuntu": "mide-software-store",
+    "software-properties": "mide-software-store",
+    "terminix": "mide-terminal",
+    "input-mouse": "mide-mouse",
+    "vmware-netcfg": "mide-settings",
+    "jockey": "mide-settings",
+    "preferences-system-backup": "mide-backup",
+    "org.gnome.Loupe": "mide-image-viewer",
+    "Showtime": "mide-video-player",
+    "cantata": "mide-music",
+    "elisa": "mide-music",
+    "juk": "mide-music",
+    "playmymusic": "mide-music",
+    "lx-music-desktop": "mide-music",
+    "podcast-amarok": "mide-podcast",
+    "polari": "mide-chat",
+    "pidgin": "mide-chat",
+    "gnome-sound-recorder": "mide-recorder",
+    "fonts": "mide-fonts",
+    "embellish": "mide-fonts",
+    "calligrawords": "mide-text-editor",
+    "words": "mide-text-editor",
+    "indicator-weather": "mide-weather",
 }
 
 # Nomes dos apps do mide (os `.desktop` do mide usam estes) → ícone.
@@ -89,6 +115,55 @@ MARK = (
     '<path d="M8 2.2A5.8 5.8 0 1 0 8 13.8 5.8 5.8 0 0 0 8 2.2zm0 1.75a4.05 4.05 0 1 1 0 8.1 4.05 4.05 0 0 1 0-8.1z"/>'
     '<circle cx="9.55" cy="6.45" r="1.75"/>'
 )
+
+
+# Desenhos de iMac com a maçã no queixo.
+APPLE_ON_MONITOR = [
+    "src/devices/scalable/computer.svg",
+    "src/devices/scalable/video-television.svg",
+    "src/apps/scalable/variety.svg",
+    "src/apps/scalable/variety-slideshow.svg",
+    "src/apps/scalable/xwaylandvideobridge.svg",
+    "src/apps/scalable/putty.svg",
+]
+
+
+def path_bbox(d):
+    """Caixa aproximada de um caminho SVG (pelos pontos de cada comando)."""
+    tokens = re.findall(r"[MmLlHhVvCcSsQqTtAaZz]|-?(?:\d+\.?\d*|\.\d+)(?:e-?\d+)?", d)
+    counts = {"M": 2, "L": 2, "H": 1, "V": 1, "C": 6, "S": 4, "Q": 4, "T": 2, "A": 7, "Z": 0}
+    x = y = sx = sy = 0.0
+    xs, ys = [], []
+    i, cmd = 0, None
+    while i < len(tokens):
+        if tokens[i].isalpha():
+            cmd = tokens[i]
+            i += 1
+            if cmd in "Zz":
+                x, y = sx, sy
+                continue
+        n = counts[cmd.upper()]
+        args = [float(t) for t in tokens[i : i + n]]
+        i += n
+        rel = cmd.islower()
+        up = cmd.upper()
+        if up == "H":
+            x = x + args[0] if rel else args[0]
+        elif up == "V":
+            y = y + args[0] if rel else args[0]
+        else:
+            pts = [(args[j], args[j + 1]) for j in range(0, n, 2)] if up != "A" else [(args[5], args[6])]
+            for px, py in pts:
+                ax, ay = (x + px, y + py) if rel else (px, py)
+                xs.append(ax)
+                ys.append(ay)
+            x, y = (x + pts[-1][0], y + pts[-1][1]) if rel else pts[-1]
+        xs.append(x)
+        ys.append(y)
+        if up == "M":
+            sx, sy = x, y
+            cmd = "l" if rel else "L"
+    return min(xs), min(ys), max(xs), max(ys)
 
 
 def mark_svg(size, color="#363636"):
@@ -116,6 +191,10 @@ def main():
     # 1. Recriações de ícones da Apple → ícones do mide.
     for target, source in REPLACE.items():
         write(APPS / f"{target}.svg", (ICONS / f"{source}.svg").read_text())
+        # Um atalho com o mesmo nome em `links/` seria copiado por cima na instalação.
+        link = LINKS / f"{target}.svg"
+        if link.is_symlink():
+            link.unlink()
     for icon in ICONS.glob("mide-*.svg"):
         if icon.name != "mide-mark.svg":
             write(APPS / icon.name, icon.read_text())
@@ -128,14 +207,19 @@ def main():
         text = path.read_text()
         color = re.search(r"color:\s*(#[0-9a-fA-F]{3,6})", text)
         write(path, mark_svg(size_of(path), color.group(1) if color else "#363636"))
-    computer = ROOT / "src/devices/scalable/computer.svg"
-    text = computer.read_text()
-    text = re.sub(
-        r'<path fill="#1e1f28" d="M34\.09 48\.22[^"]*"/>',
-        '<g fill="#1e1f28" transform="translate(29.2 44.5) scale(.36)">' + MARK + "</g>",
-        text,
-    )
-    write(computer, text)
+    # A maçã nos desenhos de iMac (um caminho escuro no queixo do monitor): a marca do
+    # mide no mesmo lugar e tamanho.
+    for rel in APPLE_ON_MONITOR:
+        path = ROOT / rel
+        text = path.read_text()
+        def to_mark(m):
+            x0, y0, x1, y1 = path_bbox(m.group(1))
+            size = max(x1 - x0, y1 - y0)
+            cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+            k = size / 11.6  # a marca ocupa 11,6 da grade de 16
+            return f'<g fill="#1e1f28" transform="translate({cx - 8 * k:.3f} {cy - 8 * k:.3f}) scale({k:.4f})">' + MARK + "</g>"
+        text = re.sub(r'<path fill="#1e1f28" d="([^"]+)"/>', to_mark, text)
+        write(path, text)
     for path in ROOT.glob("src/places/**/folder-apple*.svg"):
         plain = path.with_name(path.name.replace("folder-apple", "folder"))
         if plain.exists():

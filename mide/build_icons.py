@@ -550,6 +550,52 @@ def backup():
     icon("mide-backup", "#7cc4ff", "#3b6fd8", defs, body)
 
 
+def video_player():
+    """Vídeo: quadro de filme com o botão de tocar (no lugar do "Q" do QuickTime)."""
+    defs = """
+<linearGradient id="film" x1="0" x2="0" y1="3.5" y2="13.5" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#2b2f38"/><stop offset="1" stop-color="#121418"/></linearGradient>
+<linearGradient id="play" x1="7" x2="11" y1="6" y2="11" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ff9a5a"/><stop offset="1" stop-color="#ff4f7b"/></linearGradient>"""
+    holes = "".join(
+        f'<rect x="{x}" y="{y}" width=".75" height=".55" rx=".15" fill="#fff" opacity=".85"/>'
+        for x in (3.55, 12.63)
+        for y in (4.6, 6.0, 7.4, 8.8, 10.2, 11.6)
+    )
+    body = f"""
+<rect x="3.05" y="3.8" width="10.83" height="9.4" rx=".9" fill="#000" opacity=".45" filter="url(#soft)" transform="translate(0 .35)"/>
+<rect x="3.05" y="3.8" width="10.83" height="9.4" rx=".9" fill="url(#film)"/>
+{holes}
+<circle cx="8.466" cy="8.5" r="2.55" fill="url(#play)"/>
+<path d="M7.75 7.2v2.6c0 .2.22.32.39.21l2.05-1.3a.25.25 0 0 0 0-.42l-2.05-1.3a.25.25 0 0 0-.39.21z" fill="#fff"/>"""
+    icon("mide-video-player", "#7aa8ff", "#3f4fd8", defs, body)
+
+
+def mouse():
+    """Mouse: mouse com dois botões e a roda (no lugar do mouse da Apple)."""
+    defs = """
+<linearGradient id="shell" x1="0" x2="0" y1="3" y2="14" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#d3d9e2"/></linearGradient>"""
+    shape = "M8.466 2.9c2.1 0 3.4 1.6 3.4 3.7v3.8c0 2.1-1.3 3.75-3.4 3.75s-3.4-1.65-3.4-3.75V6.6c0-2.1 1.3-3.7 3.4-3.7z"
+    body = f"""
+<path d="{shape}" fill="#000" opacity=".4" filter="url(#soft)" transform="translate(0 .35)"/>
+<path d="{shape}" fill="url(#shell)"/>
+<path d="M5.07 7.15h6.79M8.466 2.95v4.2" stroke="#aab3c0" stroke-width=".14"/>
+<rect x="8.16" y="4.05" width=".62" height="1.55" rx=".31" fill="#5b6478"/>
+<path d="M5.4 5.2c.2-1 .9-1.75 1.9-2.05" fill="none" stroke="#fff" stroke-width=".3" stroke-linecap="round" opacity=".9"/>"""
+    icon("mide-mouse", "#9aa6b8", "#4f5a6c", defs, body)
+
+
+def notifications():
+    """Notificações: sino com o selo (no lugar dos balões de mensagem)."""
+    defs = """
+<linearGradient id="bell" x1="0" x2="0" y1="3" y2="12.5" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e3ecfb"/></linearGradient>"""
+    bell = "M8.466 3.4c1.95 0 3.35 1.5 3.35 3.45v2.4l1.05 1.6c.2.3 0 .7-.37.7H4.43c-.36 0-.57-.4-.37-.7l1.05-1.6v-2.4c0-1.95 1.4-3.45 3.35-3.45z"
+    body = f"""
+<path d="{bell}" fill="#3a0d5c" opacity=".4" filter="url(#soft)" transform="translate(0 .35)"/>
+<path d="{bell}" fill="url(#bell)"/>
+<path d="M7.25 12.05a1.25 1.25 0 0 0 2.43 0z" fill="url(#bell)"/>
+<circle cx="11.9" cy="4.3" r="1.25" fill="#ff5a5f" stroke="#fff" stroke-width=".22"/>"""
+    icon("mide-notifications", "#c08bff", "#7a3fe0", defs, body)
+
+
 def mark_symbolic(path, size, color="#363636"):
     """Marca do mide (anel com ponto) no lugar do logo da Apple, para ícones de
     `start-here` (menu do sistema). Cor pelo esquema do tema, como o original."""
@@ -595,5 +641,8 @@ if __name__ == "__main__":
     image_viewer()
     disks()
     backup()
+    video_player()
+    mouse()
+    notifications()
     mark_symbolic(OUT / "mide-mark.svg", 16)
     print("ícones gerados em", OUT)

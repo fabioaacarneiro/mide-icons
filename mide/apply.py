@@ -55,6 +55,17 @@ REPLACE = {
     "eog": "mide-image-viewer",
     "gnome-disks": "mide-disks",
     "deja-dup": "mide-backup",
+    "cheese": "mide-camera",
+    "org.gnome.Totem": "mide-video-player",
+    "org.gnome.PowerStats": "mide-system-monitor",
+    "system-software-update": "mide-software-store",
+    "org.gnome.Software.Generic": "mide-software-store",
+    "org.gnome.Terminal.Preferences": "mide-terminal",
+    # Painéis de configurações que recriavam os da Apple (um com o logo dela).
+    "preferences-desktop-icons": "mide-default-app",
+    "preferences-desktop-navigation": "mide-web-browser",
+    "preferences-desktop-peripherals": "mide-mouse",
+    "preferences-desktop-notification": "mide-notifications",
 }
 
 # Nomes dos apps do mide (os `.desktop` do mide usam estes) → ícone.

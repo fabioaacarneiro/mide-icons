@@ -36,6 +36,25 @@ REPLACE = {
     "accessories-text-editor": "mide-text-editor",
     "text-editor": "mide-text-editor",
     "accessories-screenshot": "mide-screenshot",
+    # Etapa 2: os outros apps que recriavam o ícone de um app da Apple.
+    "calendar": "mide-calendar",
+    "preferences-system-time": "mide-clock",
+    "addressbook": "mide-contacts",
+    "gnome-music": "mide-music",
+    "shotwell": "mide-photos",
+    "utilities-system-monitor": "mide-system-monitor",
+    "gnome-maps": "mide-maps",
+    "basket": "mide-reminders",
+    "help": "mide-help",
+    "accessories-dictionary": "mide-dictionary",
+    "accessories-podcast": "mide-podcast",
+    "access": "mide-accessibility",
+    "accessories-camera": "mide-camera",
+    "accessories-system-cleaner": "mide-cleaner",
+    "internet-mail": "mide-mail",
+    "eog": "mide-image-viewer",
+    "gnome-disks": "mide-disks",
+    "deja-dup": "mide-backup",
 }
 
 # Nomes dos apps do mide (os `.desktop` do mide usam estes) → ícone.

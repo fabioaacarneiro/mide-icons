@@ -208,6 +208,348 @@ def default_app():
     icon("mide-default-app", "#9aa6b8", "#5b6578", defs, body)
 
 
+# ---- Etapa 2: apps que tinham recriação do ícone da Apple ----
+
+def calendar():
+    """Calendário: folha com argolas, cabeçalho colorido e a grade dos dias."""
+    defs = """
+<linearGradient id="sheet" x1="0" x2="0" y1="3" y2="14.6" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#eef1f6"/></linearGradient>
+<linearGradient id="cal-head" x1="3" x2="13.9" y1="0" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ff7a59"/><stop offset="1" stop-color="#ff4f7b"/></linearGradient>
+<linearGradient id="ring" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#5b6170"/><stop offset="1" stop-color="#2b2f38"/></linearGradient>"""
+    sheet = "M3.85 3.6h9.23c.47 0 .85.38.85.85v8.95c0 .47-.38.85-.85.85H3.85a.85.85 0 0 1-.85-.85V4.45c0-.47.38-.85.85-.85z"
+    days = ""
+    for row in range(4):
+        for col in range(5):
+            x = 4.45 + col * 1.85
+            y = 7.55 + row * 1.5
+            if (row, col) == (1, 3):
+                days += f'<circle cx="{x + .45}" cy="{y + .4}" r=".72" fill="url(#cal-head)"/><circle cx="{x + .45}" cy="{y + .4}" r=".22" fill="#fff"/>'
+            else:
+                days += f'<rect x="{x}" y="{y}" width=".9" height=".8" rx=".22" fill="#c4cad5"/>'
+    body = f"""
+<path d="{sheet}" fill="#5b6478" opacity=".4" filter="url(#soft)" transform="translate(0 .35)"/>
+<path d="{sheet}" fill="url(#sheet)"/>
+<path d="M3.85 3.6h9.23c.47 0 .85.38.85.85v1.75H3V4.45c0-.47.38-.85.85-.85z" fill="url(#cal-head)"/>
+<rect x="4.4" y="5.2" width="3.6" height=".42" rx=".21" fill="#fff" opacity=".85"/>
+{days}
+<rect x="5.15" y="2.45" width=".62" height="2.1" rx=".31" fill="url(#ring)"/>
+<rect x="11.16" y="2.45" width=".62" height="2.1" rx=".31" fill="url(#ring)"/>"""
+    icon("mide-calendar", "#fdfdfe", "#dfe3ea", defs, body)
+
+
+def clock():
+    """Relógio: mostrador claro sobre o quadrado azul-esverdeado."""
+    defs = """
+<radialGradient id="face" cx="7.6" cy="7.2" r="6.6" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e6ebf2"/></radialGradient>"""
+    import math
+    ticks = ""
+    for i in range(12):
+        a = math.radians(i * 30)
+        r1, r2 = (4.15, 4.85) if i % 3 == 0 else (4.45, 4.85)
+        w = ".32" if i % 3 == 0 else ".16"
+        x1, y1 = CX + r1 * math.sin(a), CY - r1 * math.cos(a)
+        x2, y2 = CX + r2 * math.sin(a), CY - r2 * math.cos(a)
+        ticks += f'<path d="M{x1:.3f} {y1:.3f}L{x2:.3f} {y2:.3f}" stroke="#3b4252" stroke-width="{w}" stroke-linecap="round"/>'
+    def hand(deg, length, width, color):
+        a = math.radians(deg)
+        x, y = CX + length * math.sin(a), CY - length * math.cos(a)
+        bx, by = CX - .7 * math.sin(a), CY + .7 * math.cos(a)
+        return f'<path d="M{bx:.3f} {by:.3f}L{x:.3f} {y:.3f}" stroke="{color}" stroke-width="{width}" stroke-linecap="round"/>'
+    body = f"""
+<circle cx="{CX}" cy="{CY + .4}" r="5.55" fill="#003a4a" opacity=".45" filter="url(#soft)"/>
+<circle cx="{CX}" cy="{CY}" r="5.55" fill="url(#face)"/>
+<circle cx="{CX}" cy="{CY}" r="5.5" fill="none" stroke="#000" stroke-opacity=".12" stroke-width=".1"/>
+{ticks}
+{hand(310, 2.6, ".46", "#1f2633")}
+{hand(60, 3.7, ".34", "#1f2633")}
+{hand(170, 4.1, ".14", "#ff6a3d")}
+<circle cx="{CX}" cy="{CY}" r=".42" fill="#1f2633"/><circle cx="{CX}" cy="{CY}" r=".18" fill="#ff6a3d"/>"""
+    icon("mide-clock", "#3fd3c6", "#1677c9", defs, body)
+
+
+def contacts():
+    """Contatos: cartão de visita com o avatar e as linhas de dados."""
+    defs = """
+<linearGradient id="card" x1="0" x2="0" y1="4" y2="13" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#eef1f6"/></linearGradient>
+<linearGradient id="avatar" x1="3.9" x2="7.6" y1="5.6" y2="10.6" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#8fb6ff"/><stop offset="1" stop-color="#5a7bf0"/></linearGradient>"""
+    card = "M3.6 4.25h9.73c.5 0 .9.4.9.9v6.7c0 .5-.4.9-.9.9H3.6a.9.9 0 0 1-.9-.9v-6.7c0-.5.4-.9.9-.9z"
+    body = f"""
+<path d="{card}" fill="#6a2b10" opacity=".4" filter="url(#soft)" transform="translate(0 .35)"/>
+<path d="{card}" fill="url(#card)"/>
+<circle cx="5.85" cy="8.2" r="2.05" fill="url(#avatar)"/>
+<circle cx="5.85" cy="7.55" r=".78" fill="#fff" opacity=".95"/>
+<path d="M4.45 9.85c.3-.85.9-1.25 1.4-1.25s1.1.4 1.4 1.25a2.05 2.05 0 0 1-2.8 0z" fill="#fff" opacity=".95"/>
+<rect x="8.6" y="6.6" width="4.4" height=".5" rx=".25" fill="#3b4252"/>
+<rect x="8.6" y="7.75" width="3.3" height=".42" rx=".21" fill="#b9c0cc"/>
+<rect x="8.6" y="8.8" width="3.9" height=".42" rx=".21" fill="#b9c0cc"/>
+<rect x="8.6" y="9.85" width="2.4" height=".42" rx=".21" fill="#ff8a5c"/>"""
+    icon("mide-contacts", "#ffbf6b", "#ff6f4f", defs, body)
+
+
+def music():
+    """Música: disco de vinil com selo colorido (no lugar da nota rosa)."""
+    defs = """
+<radialGradient id="vinyl" cx="8.466" cy="8.458" r="5.4" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#3a3d46"/><stop offset=".55" stop-color="#16181d"/><stop offset="1" stop-color="#0b0c0f"/></radialGradient>
+<linearGradient id="label" x1="6.9" x2="10" y1="6.9" y2="10" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffb347"/><stop offset="1" stop-color="#ff4f7b"/></linearGradient>
+<linearGradient id="sheen" x1="3.5" x2="13.4" y1="3.5" y2="13.4" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".45" stop-color="#fff" stop-opacity=".18"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/></linearGradient>"""
+    grooves = "".join(f'<circle cx="{CX}" cy="{CY}" r="{r}" fill="none" stroke="#fff" stroke-opacity=".07" stroke-width=".06"/>' for r in (2.4, 2.9, 3.4, 3.9, 4.4, 4.9))
+    body = f"""
+<circle cx="{CX}" cy="{CY + .4}" r="5.4" fill="#000" opacity=".5" filter="url(#soft)"/>
+<circle cx="{CX}" cy="{CY}" r="5.4" fill="url(#vinyl)"/>
+{grooves}
+<circle cx="{CX}" cy="{CY}" r="5.4" fill="url(#sheen)"/>
+<circle cx="{CX}" cy="{CY}" r="1.85" fill="url(#label)"/>
+<circle cx="{CX}" cy="{CY}" r=".3" fill="#0b0c0f"/>
+<path d="M12.6 3.4l-1.9 3.3" stroke="#d7dbe2" stroke-width=".38" stroke-linecap="round"/>
+<circle cx="12.7" cy="3.3" r=".62" fill="#eef1f6"/>"""
+    icon("mide-music", "#8a5cff", "#3a2bb8", defs, body)
+
+
+def photos():
+    """Fotos: três fotos em leque, com paisagens em degradê (no lugar da flor)."""
+    defs = """
+<linearGradient id="sky1" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#7cc8ff"/><stop offset="1" stop-color="#d9f0ff"/></linearGradient>
+<linearGradient id="hill1" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#4fc27f"/><stop offset="1" stop-color="#1f8f57"/></linearGradient>
+<linearGradient id="sky2" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ff9a6b"/><stop offset="1" stop-color="#ffd59a"/></linearGradient>
+<linearGradient id="hill2" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#7a5cff"/><stop offset="1" stop-color="#4a33c9"/></linearGradient>"""
+    def photo(angle, dx, sky, hill, sun):
+        return f"""<g transform="rotate({angle} 8.466 9) translate({dx} 0)">
+<rect x="4.2" y="4.6" width="8.53" height="7.2" rx=".55" fill="#2b2f38" opacity=".35" filter="url(#soft)" transform="translate(0 .3)"/>
+<rect x="4.2" y="4.6" width="8.53" height="7.2" rx=".55" fill="#fff"/>
+<rect x="4.75" y="5.15" width="7.43" height="5.5" rx=".25" fill="url(#{sky})"/>
+<circle cx="10.6" cy="6.5" r=".7" fill="{sun}"/>
+<path d="M4.75 9.4c1.1-1.1 2.2-1.65 3.3-.9.8.55 1.45.2 2.2-.35.8-.6 1.4-.3 1.93.15v2.1a.25.25 0 0 1-.25.25H5a.25.25 0 0 1-.25-.25z" fill="url(#{hill})"/>
+</g>"""
+    body = photo(-12, -.4, "sky2", "hill2", "#fff3c4") + photo(8, .3, "sky1", "hill1", "#fff")
+    icon("mide-photos", "#ffffff", "#e3e8f0", defs, body)
+
+
+def system_monitor():
+    """Monitor do sistema: barras de uso e a linha de carga (no lugar do ECG verde)."""
+    defs = """
+<linearGradient id="panel" x1="0" x2="0" y1="3" y2="14" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#262a33"/><stop offset="1" stop-color="#14161b"/></linearGradient>
+<linearGradient id="bar" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#5ec8ff"/><stop offset="1" stop-color="#3a6bff"/></linearGradient>
+<linearGradient id="line" x1="3" x2="14" y1="0" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffb347"/><stop offset="1" stop-color="#ff4f7b"/></linearGradient>"""
+    bars = ""
+    for i, h in enumerate((3.2, 5.4, 2.4, 6.6, 4.4)):
+        x = 4.0 + i * 1.85
+        bars += f'<rect x="{x}" y="{12.6 - h}" width="1.2" height="{h}" rx=".3" fill="url(#bar)" opacity=".9"/>'
+    body = f"""
+<rect x="2.6" y="2.75" width="11.73" height="11.43" rx="1.9" fill="url(#panel)" stroke="#000" stroke-opacity=".4" stroke-width=".1"/>
+<path d="M3.4 6h10.1M3.4 8.4h10.1M3.4 10.8h10.1" stroke="#fff" stroke-opacity=".07" stroke-width=".08"/>
+{bars}
+<path d="M3.6 9.6l2-1.9 1.6 1.2 2.1-3.1 1.8 1.6 2.4-2.6" fill="none" stroke="url(#line)" stroke-width=".42" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="13.5" cy="4.8" r=".45" fill="#ff4f7b"/>"""
+    icon("mide-system-monitor", "#eef1f6", "#c9d0db", defs, body)
+
+
+def maps():
+    """Mapas: mapa dobrado em três partes com o alfinete (no lugar das ruas e da bússola)."""
+    defs = """
+<linearGradient id="m1" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#bff0d0"/><stop offset="1" stop-color="#8fd9ad"/></linearGradient>
+<linearGradient id="m2" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#9fe3bd"/><stop offset="1" stop-color="#6cc794"/></linearGradient>
+<linearGradient id="pin" x1="0" x2="0" y1="3" y2="9" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ff7a6b"/><stop offset="1" stop-color="#e5304f"/></linearGradient>"""
+    body = """
+<path d="M3 4.9l3.4-1.2 4.1 1.2 3.4-1.2v8.6l-3.4 1.2-4.1-1.2L3 13.5z" fill="#0b4f3a" opacity=".4" filter="url(#soft)" transform="translate(0 .35)"/>
+<path d="M3 4.9l3.4-1.2v8.6L3 13.5z" fill="url(#m1)"/>
+<path d="M6.4 3.7l4.1 1.2v8.6l-4.1-1.2z" fill="url(#m2)"/>
+<path d="M10.5 4.9l3.4-1.2v8.6l-3.4 1.2z" fill="url(#m1)"/>
+<path d="M3.6 10.6c1.4-.6 2.6.4 3.9-.3 1.3-.7 2.2-1.9 3.6-1.5 1.1.3 1.6-.2 2.2-.7" fill="none" stroke="#fff" stroke-width=".42" stroke-linecap="round" opacity=".9"/>
+<path d="M3.6 10.6c1.4-.6 2.6.4 3.9-.3 1.3-.7 2.2-1.9 3.6-1.5 1.1.3 1.6-.2 2.2-.7" fill="none" stroke="#f4b740" stroke-width=".2" stroke-linecap="round"/>
+<path d="M9.6 9.3c-.25-1.1-1.85-2.2-1.85-3.6a1.85 1.85 0 0 1 3.7 0c0 1.4-1.6 2.5-1.85 3.6z" fill="#000" opacity=".35" filter="url(#soft)" transform="translate(0 .25)"/>
+<path d="M9.6 9.3c-.25-1.1-1.85-2.2-1.85-3.6a1.85 1.85 0 0 1 3.7 0c0 1.4-1.6 2.5-1.85 3.6z" fill="url(#pin)"/>
+<circle cx="9.6" cy="5.7" r=".7" fill="#fff"/>"""
+    icon("mide-maps", "#4fd1c5", "#1c8f8a", defs, body)
+
+
+def reminders():
+    """Lembretes: lista com caixas marcadas (no lugar dos pontos coloridos)."""
+    defs = """
+<linearGradient id="list" x1="0" x2="0" y1="3" y2="14" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#eef1f6"/></linearGradient>
+<linearGradient id="tick" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#4fe08f"/><stop offset="1" stop-color="#17a85f"/></linearGradient>"""
+    card = "M4.1 3h8.73c.58 0 1.05.47 1.05 1.05v8.85c0 .58-.47 1.05-1.05 1.05H4.1a1.05 1.05 0 0 1-1.05-1.05V4.05C3.05 3.47 3.52 3 4.1 3z"
+    rows = ""
+    for i, done in enumerate((True, True, False)):
+        y = 4.75 + i * 2.75
+        if done:
+            rows += f'<rect x="4.2" y="{y}" width="1.75" height="1.75" rx=".45" fill="url(#tick)"/><path d="M4.65 {y + .9}l.45.45.85-.95" fill="none" stroke="#fff" stroke-width=".3" stroke-linecap="round" stroke-linejoin="round"/>'
+            rows += f'<rect x="6.75" y="{y + .67}" width="{4.6 - i * 1.1}" height=".42" rx=".21" fill="#b9c0cc"/>'
+        else:
+            rows += f'<rect x="4.25" y="{y + .05}" width="1.65" height="1.65" rx=".42" fill="none" stroke="#9aa3b2" stroke-width=".18"/>'
+            rows += f'<rect x="6.75" y="{y + .67}" width="5.2" height=".42" rx=".21" fill="#3b4252"/>'
+    body = f"""
+<path d="{card}" fill="#3a2b7a" opacity=".4" filter="url(#soft)" transform="translate(0 .35)"/>
+<path d="{card}" fill="url(#list)"/>
+{rows}"""
+    icon("mide-reminders", "#a78bff", "#6a4cf0", defs, body)
+
+
+def help_icon():
+    """Ajuda: balão de conversa com o ponto de interrogação."""
+    defs = """
+<linearGradient id="bubble" x1="0" x2="0" y1="3" y2="13" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e3ecfb"/></linearGradient>"""
+    bubble = "M8.466 3.1c3.05 0 5.4 2 5.4 4.55S11.52 12.2 8.466 12.2c-.55 0-1.07-.06-1.57-.18L4.7 13.4l.55-2.15C3.92 10.43 3.07 9.13 3.07 7.65 3.07 5.1 5.42 3.1 8.466 3.1z"
+    body = f"""
+<path d="{bubble}" fill="#003a8c" opacity=".4" filter="url(#soft)" transform="translate(0 .35)"/>
+<path d="{bubble}" fill="url(#bubble)"/>
+<path d="M7.15 6.4c.1-.8.65-1.3 1.4-1.3.8 0 1.35.5 1.35 1.15 0 .55-.3.85-.8 1.15-.45.27-.6.5-.6.95v.25" fill="none" stroke="#1d74f0" stroke-width=".55" stroke-linecap="round"/>
+<circle cx="8.5" cy="10.05" r=".38" fill="#1d74f0"/>"""
+    icon("mide-help", "#5ec8ff", "#1d6fe8", defs, body)
+
+
+def dictionary():
+    """Dicionário: livro aberto com a fita marcadora (no lugar do livro vermelho "Aa")."""
+    defs = """
+<linearGradient id="pg" x1="0" x2="0" y1="4" y2="13" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#ece8df"/></linearGradient>
+<linearGradient id="cover" x1="0" x2="0" y1="4" y2="13.5" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#2f5d8c"/><stop offset="1" stop-color="#1c3a5c"/></linearGradient>"""
+    body = """
+<path d="M2.6 5.2c2-.6 4-.5 5.866.6 1.866-1.1 3.866-1.2 5.866-.6v7.6c-2-.6-4-.5-5.866.6-1.866-1.1-3.866-1.2-5.866-.6z" fill="#000" opacity=".35" filter="url(#soft)" transform="translate(0 .35)"/>
+<path d="M2.6 5.6c2-.6 4-.5 5.866.6 1.866-1.1 3.866-1.2 5.866-.6v7.6c-2-.6-4-.5-5.866.6-1.866-1.1-3.866-1.2-5.866-.6z" fill="url(#cover)"/>
+<path d="M3.1 4.8c1.85-.55 3.7-.45 5.366.55v7.6c-1.666-1-3.516-1.1-5.366-.55z" fill="url(#pg)"/>
+<path d="M13.832 4.8c-1.85-.55-3.7-.45-5.366.55v7.6c1.666-1 3.516-1.1 5.366-.55z" fill="url(#pg)"/>
+<path d="M8.466 5.35v7.6" stroke="#c9c2b3" stroke-width=".12"/>
+""" + "".join(
+        f'<path d="M{x0} {y}c1.2-.3 2.3-.25 3.4.2" fill="none" stroke="#b5b0a6" stroke-width=".2" stroke-linecap="round"/>'
+        for x0 in (3.75,)
+        for y in (6.6, 7.6, 8.6, 9.6, 10.6)
+    ) + "".join(
+        f'<path d="M{x0} {y}c1.1-.45 2.2-.5 3.4-.2" fill="none" stroke="#b5b0a6" stroke-width=".2" stroke-linecap="round"/>'
+        for x0 in (9.3,)
+        for y in (6.8, 7.8, 8.8, 9.8)
+    ) + """
+<path d="M11.7 4.55v3.4l.55-.45.55.45v-3.5c-.37-.04-.74-.02-1.1.1z" fill="#ff5a5f"/>"""
+    icon("mide-dictionary", "#6fd3c9", "#1f8f9e", defs, body)
+
+
+def podcast():
+    """Podcasts: microfone de estúdio (no lugar das ondas roxas)."""
+    defs = """
+<linearGradient id="mic" x1="6.6" x2="10.4" y1="0" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#e9edf3"/><stop offset=".5" stop-color="#fff"/><stop offset="1" stop-color="#c7ced9"/></linearGradient>"""
+    grille = "".join(f'<path d="M6.95 {y}h3.03" stroke="#8a93a3" stroke-width=".12" opacity=".7"/>' for y in (4.9, 5.55, 6.2, 6.85, 7.5, 8.15))
+    body = f"""
+<rect x="6.55" y="3.2" width="3.83" height="6.6" rx="1.9" fill="#3a0d0d" opacity=".45" filter="url(#soft)" transform="translate(0 .35)"/>
+<rect x="6.55" y="3.2" width="3.83" height="6.6" rx="1.9" fill="url(#mic)"/>
+{grille}
+<path d="M5.1 8.2a3.37 3.37 0 0 0 6.73 0" fill="none" stroke="#fff" stroke-width=".5" stroke-linecap="round"/>
+<path d="M8.466 11.55v1.6M6.6 13.4h3.73" stroke="#fff" stroke-width=".5" stroke-linecap="round"/>"""
+    icon("mide-podcast", "#ff9a5a", "#e8364f", defs, body)
+
+
+def accessibility():
+    """Acessibilidade: o símbolo universal dentro do anel."""
+    body = """
+<circle cx="8.466" cy="8.458" r="5.1" fill="none" stroke="#fff" stroke-width=".55" opacity=".95"/>
+<circle cx="8.466" cy="5.35" r=".85" fill="#fff"/>
+<path d="M5.35 6.75c1.05.3 2.05.45 3.116.45s2.066-.15 3.116-.45" fill="none" stroke="#fff" stroke-width=".62" stroke-linecap="round"/>
+<path d="M8.466 7.2v2.2M8.466 9.4l-1.35 2.8M8.466 9.4l1.35 2.8" fill="none" stroke="#fff" stroke-width=".62" stroke-linecap="round" stroke-linejoin="round"/>"""
+    icon("mide-accessibility", "#4fe08f", "#139a6b", "", body)
+
+
+def camera():
+    """Câmera: corpo de câmera com lente de vidro (no lugar da Captura de Imagem)."""
+    defs = """
+<linearGradient id="body" x1="0" x2="0" y1="5" y2="13" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f4f6f9"/><stop offset="1" stop-color="#c9d0da"/></linearGradient>
+<radialGradient id="lens" cx="7.9" cy="8.6" r="3" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#5b7bd6"/><stop offset=".45" stop-color="#1b2a55"/><stop offset="1" stop-color="#05070d"/></radialGradient>"""
+    cam = "M4.1 5.55h1.6l.7-1.05h4.13l.7 1.05h1.6c.6 0 1.1.5 1.1 1.1v5.65c0 .6-.5 1.1-1.1 1.1H4.1c-.6 0-1.1-.5-1.1-1.1V6.65c0-.6.5-1.1 1.1-1.1z"
+    body = f"""
+<path d="{cam}" fill="#000" opacity=".45" filter="url(#soft)" transform="translate(0 .35)"/>
+<path d="{cam}" fill="url(#body)"/>
+<circle cx="8.466" cy="9.45" r="2.95" fill="#2b2f38"/>
+<circle cx="8.466" cy="9.45" r="2.55" fill="#8a93a3"/>
+<circle cx="8.466" cy="9.45" r="2.25" fill="url(#lens)"/>
+<ellipse cx="7.75" cy="8.6" rx=".75" ry=".45" fill="#fff" opacity=".65" transform="rotate(-30 7.75 8.6)"/>
+<circle cx="12.1" cy="7.05" r=".42" fill="#ff8a3d"/>"""
+    icon("mide-camera", "#4a5568", "#1a202c", defs, body)
+
+
+def cleaner():
+    """Limpeza do sistema: vassoura com brilhos (no lugar do estetoscópio)."""
+    defs = """
+<linearGradient id="handle" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#d9a066"/><stop offset="1" stop-color="#a86a32"/></linearGradient>
+<linearGradient id="bristle" x1="0" x2="0" y1="9" y2="13.8" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffd36b"/><stop offset="1" stop-color="#f29a1f"/></linearGradient>"""
+    def spark(x, y, k):
+        return f'<path d="M{x} {y - k}c.12.75.25.88 1 {k}c-.75.12-.88.25-1 1c-.12-.75-.25-.88-1-1c.75-.12.88-.25 1-{k}z" fill="#fff" transform="translate(0 0)"/>'
+    body = f"""
+<g transform="rotate(-35 8.466 8.458)">
+<rect x="8.1" y="2.2" width=".75" height="7.4" rx=".37" fill="url(#handle)"/>
+<rect x="7.35" y="9.1" width="2.25" height=".9" rx=".25" fill="#5b6478"/>
+<path d="M6.9 9.95h3.15l.85 3.75c.06.28-.15.55-.44.55H6.49c-.29 0-.5-.27-.44-.55z" fill="#000" opacity=".3" filter="url(#soft)" transform="translate(0 .3)"/>
+<path d="M6.9 9.95h3.15l.85 3.75c.06.28-.15.55-.44.55H6.49c-.29 0-.5-.27-.44-.55z" fill="url(#bristle)"/>
+<path d="M7.6 10.4l-.25 3.4M8.47 10.4v3.5M9.35 10.4l.25 3.4" stroke="#c97a14" stroke-width=".14" opacity=".7"/>
+</g>
+{spark(4.2, 5.0, 1)}{spark(12.6, 9.8, 1)}{spark(5.2, 11.6, .7)}"""
+    icon("mide-cleaner", "#5ee0c8", "#169c9a", defs, body)
+
+
+def mail():
+    """Mail: envelope com a aba e o selo de mensagem nova (no lugar do "@")."""
+    defs = """
+<linearGradient id="env" x1="0" x2="0" y1="4.6" y2="12.8" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e3ecfb"/></linearGradient>
+<linearGradient id="flap" x1="0" x2="0" y1="4.6" y2="9.3" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f3f7ff"/><stop offset="1" stop-color="#cfdcf3"/></linearGradient>"""
+    env = "M3.6 4.6h9.73c.5 0 .9.4.9.9v6.4c0 .5-.4.9-.9.9H3.6a.9.9 0 0 1-.9-.9V5.5c0-.5.4-.9.9-.9z"
+    body = f"""
+<path d="{env}" fill="#003a8c" opacity=".4" filter="url(#soft)" transform="translate(0 .35)"/>
+<path d="{env}" fill="url(#env)"/>
+<path d="M2.85 12.3l4.4-3.7M14.08 12.3l-4.4-3.7" stroke="#b8c8e6" stroke-width=".18"/>
+<path d="M2.9 5.15l4.85 4.1c.42.35 1.01.35 1.43 0l4.85-4.1c-.15-.33-.48-.55-.86-.55H3.76c-.38 0-.71.22-.86.55z" fill="url(#flap)"/>
+<circle cx="13.1" cy="4.75" r="1.35" fill="#ff5a5f" stroke="#fff" stroke-width=".22"/>"""
+    icon("mide-mail", "#5ec8ff", "#1d6fe8", defs, body)
+
+
+def image_viewer():
+    """Visualizador de imagens: foto em moldura com o selo de ampliar."""
+    defs = """
+<linearGradient id="vsky" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#7cc8ff"/><stop offset="1" stop-color="#d9f0ff"/></linearGradient>
+<linearGradient id="vhill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#4fc27f"/><stop offset="1" stop-color="#1f8f57"/></linearGradient>
+<radialGradient id="glass" cx="11" cy="10.4" r="2" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#cfe6ff" stop-opacity=".2"/></radialGradient>"""
+    body = """
+<rect x="2.9" y="3.4" width="10.4" height="8.6" rx=".6" fill="#000" opacity=".3" filter="url(#soft)" transform="translate(0 .35)"/>
+<rect x="2.9" y="3.4" width="10.4" height="8.6" rx=".6" fill="#fff"/>
+<rect x="3.55" y="4.05" width="9.1" height="7.3" rx=".3" fill="url(#vsky)"/>
+<circle cx="10.9" cy="5.6" r=".85" fill="#fff6c9"/>
+<path d="M3.55 9.6c1.4-1.5 2.7-2.2 4-1.2.95.75 1.7.3 2.55-.4.95-.75 1.8-.35 2.55.3v2.75a.3.3 0 0 1-.3.3H3.85a.3.3 0 0 1-.3-.3z" fill="url(#vhill)"/>
+<circle cx="12.2" cy="11.8" r="1.75" fill="#000" opacity=".35" filter="url(#soft)" transform="translate(0 .25)"/>
+<circle cx="12.2" cy="11.8" r="1.75" fill="#1d74f0" stroke="#fff" stroke-width=".25"/>
+<path d="M11.35 12.65l1.7-1.7M12.05 10.95h1v1M11.35 11.65v1h1" fill="none" stroke="#fff" stroke-width=".3" stroke-linecap="round" stroke-linejoin="round"/>"""
+    icon("mide-image-viewer", "#ffffff", "#dfe5ee", defs, body)
+
+
+def disks():
+    """Discos: unidade com a barra de uso colorida e a luz (sem o estetoscópio)."""
+    defs = """
+<linearGradient id="drive" x1="0" x2="0" y1="5" y2="12" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f2f4f7"/><stop offset="1" stop-color="#bfc7d2"/></linearGradient>
+<linearGradient id="u1" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#5ec8ff"/><stop offset="1" stop-color="#2f7bff"/></linearGradient>
+<linearGradient id="u2" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#4fe08f"/><stop offset="1" stop-color="#17a85f"/></linearGradient>
+<linearGradient id="u3" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ffc35a"/><stop offset="1" stop-color="#f08a1a"/></linearGradient>"""
+    drive = "M3.7 5.1h9.53c.55 0 1 .45 1 1v5.7c0 .55-.45 1-1 1H3.7c-.55 0-1-.45-1-1V6.1c0-.55.45-1 1-1z"
+    body = f"""
+<path d="{drive}" fill="#000" opacity=".4" filter="url(#soft)" transform="translate(0 .35)"/>
+<path d="{drive}" fill="url(#drive)"/>
+<path d="M3.7 5.1h9.53c.55 0 1 .45 1 1v.35H2.7V6.1c0-.55.45-1 1-1z" fill="#fff" opacity=".6"/>
+<rect x="3.7" y="9.75" width="9.53" height="1.25" rx=".62" fill="#2b2f38" opacity=".85"/>
+<rect x="3.9" y="9.95" width="3.6" height=".85" rx=".42" fill="url(#u1)"/>
+<rect x="7.4" y="9.95" width="2.2" height=".85" fill="url(#u2)"/>
+<rect x="9.5" y="9.95" width="1.4" height=".85" fill="url(#u3)"/>
+<rect x="3.9" y="7.0" width="5.2" height=".42" rx=".21" fill="#8a93a3"/>
+<circle cx="12.5" cy="7.2" r=".42" fill="#3fd98f"/>"""
+    icon("mide-disks", "#5a606c", "#1d2026", defs, body)
+
+
+def backup():
+    """Backup: caixa de arquivo com a seta circular (no lugar do relógio da Time Machine)."""
+    defs = """
+<linearGradient id="box" x1="0" x2="0" y1="6" y2="13.6" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#dfe6f0"/></linearGradient>
+<linearGradient id="lid" x1="0" x2="0" y1="4" y2="6.6" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f6f8fb"/><stop offset="1" stop-color="#c9d1dd"/></linearGradient>"""
+    body = """
+<path d="M3.6 6.4h9.73v6.3c0 .5-.4.9-.9.9H4.5a.9.9 0 0 1-.9-.9z" fill="#000" opacity=".35" filter="url(#soft)" transform="translate(0 .35)"/>
+<path d="M3.6 6.4h9.73v6.3c0 .5-.4.9-.9.9H4.5a.9.9 0 0 1-.9-.9z" fill="url(#box)"/>
+<rect x="3.1" y="4.35" width="10.73" height="2.25" rx=".55" fill="url(#lid)"/>
+<rect x="7.1" y="7.25" width="2.73" height=".7" rx=".35" fill="#9aa6b8"/>
+<path d="M10.35 11.05a2 2 0 1 1-.55-1.95" fill="none" stroke="#1d74f0" stroke-width=".5" stroke-linecap="round"/>
+<path d="M9.35 8.55l.6.55-.7.4" fill="none" stroke="#1d74f0" stroke-width=".42" stroke-linecap="round" stroke-linejoin="round"/>"""
+    icon("mide-backup", "#7cc4ff", "#3b6fd8", defs, body)
+
+
 def mark_symbolic(path, size, color="#363636"):
     """Marca do mide (anel com ponto) no lugar do logo da Apple, para ícones de
     `start-here` (menu do sistema). Cor pelo esquema do tema, como o original."""
@@ -235,5 +577,23 @@ if __name__ == "__main__":
     screenshot()
     files()
     default_app()
+    calendar()
+    clock()
+    contacts()
+    music()
+    photos()
+    system_monitor()
+    maps()
+    reminders()
+    help_icon()
+    dictionary()
+    podcast()
+    accessibility()
+    camera()
+    cleaner()
+    mail()
+    image_viewer()
+    disks()
+    backup()
     mark_symbolic(OUT / "mide-mark.svg", 16)
     print("ícones gerados em", OUT)
